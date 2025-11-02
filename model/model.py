@@ -31,6 +31,18 @@ class Autonoleggio:
         self._responsabile = responsabile
 
     def get_automobili(self) -> list[Automobile] | None:
+        cnx = get_connection()
+        cursor = cnx.cursor()
+        query_read = """SELECT * FROM automobile"""
+        cursor.execute(query_read)
+        automobili=[]
+        for el in cursor:
+            a = Automobile(el[0], el[1], el[2], el[3], el[4], el[5])
+            automobili.append(a)
+        cursor.close()
+        cnx.close()
+        return automobili
+
         """
             Funzione che legge tutte le automobili nel database
             :return: una lista con tutte le automobili presenti oppure None
@@ -39,6 +51,17 @@ class Autonoleggio:
         # TODO
 
     def cerca_automobili_per_modello(self, modello) -> list[Automobile] | None:
+        cnx = get_connection()
+        cursor = cnx.cursor()
+        query_read = """SELECT * FROM automobile
+                        WHERE modello = %s"""
+        cursor.execute(query_read, (modello,))
+        automobili=[]
+        for el in cursor:
+            a = Automobile(el[0], el[1], el[2], el[3], el[4], el[5])
+            automobili.append(a)
+        return automobili
+
         """
             Funzione che recupera una lista con tutte le automobili presenti nel database di una certa marca e modello
             :param modello: il modello dell'automobile
